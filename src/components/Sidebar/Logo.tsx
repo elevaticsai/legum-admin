@@ -10,8 +10,8 @@ export const Logo: React.FC<LogoProps> = ({ collapsed = false }) => (
     <Shield className="w-8 h-8 text-indigo-600" />
     {!collapsed && (
       <div className="ml-2">
-        <h1 className="text-lg font-bold text-white">ComplianceHub</h1>
-        <p className="text-xs text-gray-400">Enterprise Suite</p>
+        <h1 className="text-lg font-bold text-white">Legum AI</h1>
+        <p className="text-xs text-gray-400">Enterprise CMS Suite</p>
       </div>
     )}
   </div>

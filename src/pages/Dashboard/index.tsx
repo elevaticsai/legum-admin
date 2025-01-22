@@ -10,7 +10,9 @@ export const DashboardPage = () => {
     filteredData, 
     data,
     filters, 
-    handleFilterChange, 
+    dateRange,
+    handleFilterChange,
+    handleDateRangeChange,
     getUniqueValues 
   } = useDataManagement();
 
@@ -22,7 +24,7 @@ export const DashboardPage = () => {
         </div>
       </div>
       <div className="p-4 sm:p-6">
-        <ComplianceOverview data={data} />
+        <ComplianceOverview data={filteredData} />
       </div>
       <DashboardTabs activeTab={activeTab} onTabChange={setActiveTab} />
       <div className="flex-1 overflow-auto">
@@ -30,7 +32,9 @@ export const DashboardPage = () => {
           data={filteredData[activeTab as keyof typeof filteredData] || []}
           allData={data}
           filters={filters}
+          dateRange={dateRange}
           onFilterChange={handleFilterChange}
+          onDateRangeChange={handleDateRangeChange}
           getUniqueValues={getUniqueValues}
           activeTab={activeTab}
         />

@@ -34,11 +34,27 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, color, trend })
   </div>
 );
 
+interface ComplianceViewProps {
+  data: (ComplianceData | EmployeeData)[];
+  allData: DataState;
+  filters: Filters;
+  dateRange: {
+    startDate: string;
+    endDate: string;
+  };
+  onFilterChange: (key: keyof Filters, value: string) => void;
+  onDateRangeChange: (range: { startDate: string; endDate: string }) => void;
+  getUniqueValues: (field: keyof ComplianceData, dataSet: string) => string[];
+  activeTab: string;
+}
+
 export const ComplianceView: React.FC<ComplianceViewProps> = ({
   data,
   allData,
   filters,
+  dateRange,
   onFilterChange,
+  onDateRangeChange,
   getUniqueValues,
   activeTab,
 }) => {
@@ -50,6 +66,8 @@ export const ComplianceView: React.FC<ComplianceViewProps> = ({
           onFilterChange={onFilterChange}
           getUniqueValues={getUniqueValues}
           activeTab={activeTab}
+          dateRange={dateRange}
+          onDateRangeChange={onDateRangeChange}
         />
         <EmployeeStats data={data as EmployeeData[]} />
       </div>
@@ -73,6 +91,8 @@ export const ComplianceView: React.FC<ComplianceViewProps> = ({
         onFilterChange={onFilterChange}
         getUniqueValues={getUniqueValues}
         activeTab={activeTab}
+        dateRange={dateRange}
+        onDateRangeChange={onDateRangeChange}
       />
       
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">

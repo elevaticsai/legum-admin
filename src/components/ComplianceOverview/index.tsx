@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
-import { AlertTriangle, CheckCircle, Clock, FileText } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Clock, FileText, Calendar } from 'lucide-react';
 import type { DataState } from '../../types';
 
 interface ComplianceOverviewProps {
@@ -8,12 +8,17 @@ interface ComplianceOverviewProps {
 }
 
 export const ComplianceOverview: React.FC<ComplianceOverviewProps> = ({ data }) => {
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    const today = new Date();
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+  });
+
   const calculateStats = () => {
     let total = 0;
     let compliant = 0;
     const stats = {
       license: { total: 0, compliant: 0 },
-      abstract: { total: 0, compliant: 0 }, // Changed from announcement to abstract
+      abstract: { total: 0, compliant: 0 },
       register: { total: 0, compliant: 0 },
       return: { total: 0, compliant: 0 },
       remittance: { total: 0, compliant: 0 }
@@ -21,7 +26,16 @@ export const ComplianceOverview: React.FC<ComplianceOverviewProps> = ({ data }) 
 
     Object.entries(data).forEach(([key, items]) => {
       if (key !== 'employee') {
-        const categoryStats = items.reduce((acc, item) => {
+        const filteredItems = items.filter(item => {
+          const itemDate = item['Valid till'] || 
+                          item['Payment Date'] || 
+                          item['Register generate Date'] || 
+                          item['Submission Date'];
+          if (!itemDate) return false;
+          return itemDate.startsWith(selectedMonth);
+        });
+
+        const categoryStats = filteredItems.reduce((acc, item) => {
           acc.total++;
           if (item['Compliance Status'] === 'Compliance') {
             acc.compliant++;
@@ -29,7 +43,6 @@ export const ComplianceOverview: React.FC<ComplianceOverviewProps> = ({ data }) 
           return acc;
         }, { total: 0, compliant: 0 });
 
-        // Map 'announcement' to 'abstract' in the stats
         const statKey = key === 'announcement' ? 'abstract' : key;
         if (statKey in stats) {
           stats[statKey as keyof typeof stats] = categoryStats;
@@ -63,7 +76,18 @@ export const ComplianceOverview: React.FC<ComplianceOverviewProps> = ({ data }) 
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6">
-      <h2 className="text-lg font-semibold mb-4">Overall Compliance Status</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-semibold">Overall Compliance Status</h2>
+        <div className="flex items-center space-x-2">
+          <Calendar className="w-5 h-5 text-gray-500" />
+          <input
+            type="month"
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value)}
+            className="rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+          />
+        </div>
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Donut Chart */}
         <div className="lg:col-span-3 flex flex-col items-center justify-center">
