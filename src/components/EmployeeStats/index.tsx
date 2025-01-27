@@ -11,8 +11,8 @@ interface EmployeeStatsProps {
 export const EmployeeStats: React.FC<EmployeeStatsProps> = ({ data }) => {
   if (!data || data.length === 0) {
     return (
-      <div className="text-center p-6 bg-white rounded-lg shadow">
-        <p className="text-gray-500">No employee data available</p>
+      <div className='text-center p-6 bg-white rounded-lg shadow'>
+        <p className='text-gray-500'>No employee data available</p>
       </div>
     );
   }
@@ -26,47 +26,47 @@ export const EmployeeStats: React.FC<EmployeeStatsProps> = ({ data }) => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className='space-y-6'>
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
         <StatsCard
-          title="Total Employees"
+          title='Total Employees'
           value={currentMonth['Total No of Employee']}
           trend={{
             value: calculateTrend(
               currentMonth['Total No of Employee'],
               previousMonth['Total No of Employee']
             ),
-            label: "vs last month"
+            label: 'vs last month',
           }}
-          icon="users"
+          icon='users'
         />
         <StatsCard
-          title="New Joiners"
+          title='New Joiners'
           value={currentMonth['Total Joinee']}
           trend={{
             value: calculateTrend(
               currentMonth['Total Joinee'],
               previousMonth['Total Joinee']
             ),
-            label: "vs last month"
+            label: 'vs last month',
           }}
-          icon="plus"
+          icon='plus'
         />
         <StatsCard
-          title="Resignations"
+          title='Resignations'
           value={currentMonth['Total Resigned']}
           trend={{
             value: calculateTrend(
               currentMonth['Total Resigned'],
               previousMonth['Total Resigned']
             ),
-            label: "vs last month"
+            label: 'vs last month',
           }}
-          icon="minus"
+          icon='minus'
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
         <EmployeeOverview data={data} />
         <GenderDistribution data={data} />
       </div>

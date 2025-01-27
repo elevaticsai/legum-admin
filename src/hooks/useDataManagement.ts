@@ -9,7 +9,7 @@ export const useDataManagement = () => {
     register: null,
     return: null,
     employee: null,
-    remittance: null
+    remittance: null,
   });
 
   const [data, setData] = useState<DataState>({
@@ -18,7 +18,7 @@ export const useDataManagement = () => {
     register: [],
     return: [],
     employee: [],
-    remittance: []
+    remittance: [],
   });
 
   const [filteredData, setFilteredData] = useState<DataState>({
@@ -27,20 +27,20 @@ export const useDataManagement = () => {
     register: [],
     return: [],
     employee: [],
-    remittance: []
+    remittance: [],
   });
 
   const [filters, setFilters] = useState<Filters>({
-    clientId: 'All',
+    // clientId: 'All',
     clientName: 'All',
-    location: 'All',
     state: 'All',
-    section: 'All'
+    branch: 'All',
+    // section: 'All',
   });
 
   const [dateRange, setDateRange] = useState({
     startDate: '',
-    endDate: ''
+    endDate: '',
   });
 
   // Load saved data on initial mount
@@ -55,17 +55,17 @@ export const useDataManagement = () => {
   const handleFileUpload = (fileType: keyof FileState, file: File) => {
     if (file) {
       const reader = new FileReader();
-      reader.onload = (event) => {
+      reader.onload = event => {
         const csvData = event.target?.result as string;
         const parsedData = parseCSV(csvData);
-        
+
         const newData = { ...data, [fileType]: parsedData };
         setData(newData);
         setFilteredData(newData);
-        
+
         const newFiles = { ...files, [fileType]: file };
         setFiles(newFiles);
-        
+
         storageService.saveData(newData);
         storageService.saveFiles(newFiles);
       };
@@ -73,27 +73,35 @@ export const useDataManagement = () => {
     }
   };
 
-  const handleFilterChange = (key: keyof Filters, value: string) => {
+  const handleFilterChange = (key: any, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
-  const handleDateRangeChange = (range: { startDate: string; endDate: string }) => {
+  const handleDateRangeChange = (range: {
+    startDate: string;
+    endDate: string;
+  }) => {
     setDateRange(range);
   };
 
-  const getUniqueValues = (field: keyof ComplianceData, dataSet: string): string[] => {
+  const getUniqueValues = (
+    field: keyof ComplianceData,
+    dataSet: string
+  ): string[] => {
     if (!data[dataSet as keyof DataState]) return ['All'];
-    const values = [...new Set(data[dataSet as keyof DataState].map(item => item[field]))];
+    const values = [
+      ...new Set(data[dataSet as keyof DataState].map(item => item[field])),
+    ];
     return ['All', ...values];
   };
 
   const isDateInRange = (dateStr: string) => {
     if (!dateRange.startDate || !dateRange.endDate) return true;
-    
+
     const date = new Date(dateStr);
     const start = new Date(dateRange.startDate);
     const end = new Date(dateRange.endDate);
-    
+
     return date >= start && date <= end;
   };
 
@@ -104,11 +112,17 @@ export const useDataManagement = () => {
       // Apply date range filter
       if (dateRange.startDate && dateRange.endDate) {
         filtered = filtered.filter(item => {
-          const dateField = tab === 'employee' ? 'Month' :
-                          tab === 'remittance' ? 'Payment Date' :
-                          tab === 'register' ? 'Register generate Date' :
-                          tab === 'return' ? 'Submission Date' : 'Valid till';
-          
+          const dateField =
+            tab === 'employee'
+              ? 'Month'
+              : tab === 'remittance'
+                ? 'Payment Date'
+                : tab === 'register'
+                  ? 'Register generate Date'
+                  : tab === 'return'
+                    ? 'Submission Date'
+                    : 'Valid till';
+
           return isDateInRange(item[dateField]);
         });
       }
@@ -116,11 +130,16 @@ export const useDataManagement = () => {
       // Apply other filters
       Object.entries(filters).forEach(([key, value]) => {
         if (value !== 'All') {
-          const field = key === 'clientId' ? 'Clients ID' :
-                       key === 'clientName' ? 'Clients Name' :
-                       key === 'location' ? 'Location' :
-                       key === 'state' ? 'State' :
-                       'Section';
+          const field =
+            key === 'clientId'
+              ? 'Clients ID'
+              : key === 'clientName'
+                ? 'Clients Name'
+                : key === 'location'
+                  ? 'Location'
+                  : key === 'state'
+                    ? 'State'
+                    : 'Section';
           filtered = filtered.filter(item => item[field] === value);
         }
       });
@@ -138,14 +157,15 @@ export const useDataManagement = () => {
     handleFileUpload,
     handleFilterChange,
     handleDateRangeChange,
-    getUniqueValues
+    getUniqueValues,
   };
 };
 
 const parseCSV = (csvData: string): any[] => {
   const lines = csvData.split('\n');
   const headers = lines[0].split(',').map(header => header.trim());
-  return lines.slice(1)
+  return lines
+    .slice(1)
     .filter(line => line.trim())
     .map(line => {
       const values = line.split(',');

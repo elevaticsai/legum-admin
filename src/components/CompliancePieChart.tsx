@@ -10,14 +10,18 @@ interface CompliancePieChartProps {
   data: ComplianceData[];
 }
 
-export const CompliancePieChart: React.FC<CompliancePieChartProps> = ({ data }) => {
+export const CompliancePieChart: React.FC<CompliancePieChartProps> = ({
+  data,
+}) => {
   const total = data.reduce((sum, item) => sum + item.value, 0);
-  const getPercentage = (value: number) => ((value / total) * 100).toFixed(1);
+  const getPercentage = (value: number) => value;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-lg font-semibold mb-4">Compliance Status Distribution</h2>
-      <div className="flex justify-center">
+    <div className=''>
+      {/* <h2 className='text-lg font-semibold mb-4'>
+        Compliance Status Distribution
+      </h2> */}
+      <div className='flex justify-center'>
         <PieChart width={200} height={200}>
           <Pie
             data={data}
@@ -26,19 +30,22 @@ export const CompliancePieChart: React.FC<CompliancePieChartProps> = ({ data }) 
             innerRadius={60}
             outerRadius={80}
             paddingAngle={5}
-            dataKey="value"
+            dataKey='value'
           >
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={index === 0 ? '#4CAF50' : '#f44336'} />
+              <Cell
+                key={`cell-${index}`}
+                fill={index === 0 ? '#4CAF50' : '#f44336'}
+              />
             ))}
             <Label
               content={({ viewBox: { cx, cy } }) => (
                 <text
                   x={cx}
                   y={cy}
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  className="text-sm font-medium"
+                  textAnchor='middle'
+                  dominantBaseline='central'
+                  className='text-sm font-medium'
                 >
                   {total > 0 ? `${getPercentage(data[0].value)}%` : '0%'}
                 </text>
@@ -47,13 +54,15 @@ export const CompliancePieChart: React.FC<CompliancePieChartProps> = ({ data }) 
           </Pie>
         </PieChart>
       </div>
-      <div className="flex justify-center gap-4 mt-4">
+      <div className='flex justify-center gap-4 mt-4'>
         {data.map((entry, index) => (
-          <div key={entry.name} className="flex items-center">
-            <div className={`w-3 h-3 rounded-full mr-2 ${
-              index === 0 ? 'bg-green-500' : 'bg-red-500'
-            }`} />
-            <span className="text-sm">
+          <div key={entry.name} className='flex items-center'>
+            <div
+              className={`w-3 h-3 rounded-full mr-2 ${
+                index === 0 ? 'bg-green-500' : 'bg-red-500'
+              }`}
+            />
+            <span className='text-sm'>
               {entry.name} ({getPercentage(entry.value)}%)
             </span>
           </div>

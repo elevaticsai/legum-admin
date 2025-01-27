@@ -45,11 +45,11 @@ export interface RemittanceData extends ComplianceData {
 }
 
 export interface Filters {
-  clientId: string;
+  // clientId: string;
   clientName: string;
-  location: string;
   state: string;
-  section: string;
+  branch: string;
+  // section: string;
 }
 
 export interface FileState {
