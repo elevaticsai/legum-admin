@@ -115,7 +115,7 @@ export const DashboardPage = () => {
       (el: any) => el._id == filter.clientName
     );
 
-    let str: any = `companyId=${filter.clientName}&branchCode=${findBranch.branchCode}&year=${getMonth}&month=${getYear}&companyCode=${clientData.companyCode}`;
+    let str: any = `companyId=${filter.clientName}&branchCode=${findBranch.branchCode}&year=${getYear}&month=${getMonth}&companyCode=${clientData.companyCode}`;
 
     let promiseArr: any = [];
     promiseArr.push(getLicense(str));
