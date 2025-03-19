@@ -11,10 +11,12 @@ import {
   getRemittance,
   getReturns,
   getRegisterCheck,
+  getSearchClients,
 } from '../../api';
 import { FilterPanel } from '../../components/FilterPanel';
 import { STATES } from '../../utils/constant';
 import moment from 'moment';
+import debounce from 'lodash/debounce';
 
 export const DashboardPage = () => {
   const [activeTab, setActiveTab] = useState('license');
@@ -44,6 +46,30 @@ export const DashboardPage = () => {
     state: [],
     branch: [],
   });
+
+  const getFromOptions = async (inputValue: any) => {
+    try {
+      const response = await getSearchClients(inputValue);
+
+      // Ensure response.searchAirports is an array with valid objects
+      const sanitizedOptions =
+        response?.result?.map((ele: any) => ({
+          ...ele,
+          value: ele?._id || '', // Ensure this exists
+          label: ele?.companyName || '', // Ensure this exists
+        })) || [];
+
+      return sanitizedOptions;
+    } catch (error) {
+      console.error('Error fetching airports:', error);
+    }
+  };
+
+  const loadFromOptions = debounce((inputValue: any, callback: any) => {
+    getFromOptions(inputValue).then(options => {
+      callback(options);
+    });
+  }, 300);
 
   const filterState = (data: any) => {
     let states: any = {};
@@ -80,6 +106,7 @@ export const DashboardPage = () => {
   };
 
   const handleFilter = (key: any, value: any) => {
+    console.log('value', value);
     let filterData = { ...filter, [key]: value };
     if (key == 'state') {
       filterData['branch'] = '';
@@ -87,7 +114,7 @@ export const DashboardPage = () => {
     } else if (key == 'clientName') {
       filterData['state'] = '';
       filterData['branch'] = '';
-      getBranchData(value);
+      getBranchData(value.value);
     }
     setFilter({ ...filterData });
   };
@@ -112,10 +139,10 @@ export const DashboardPage = () => {
     const getYear = moment(filter.date + '-01', 'YYYY-MM-DD').format('YYYY');
 
     const clientData = optionsData.clientName.find(
-      (el: any) => el._id == filter.clientName
+      (el: any) => el._id == filter.clientName.value
     );
 
-    let str: any = `companyId=${filter.clientName}&branchCode=${findBranch.branchCode}&year=${getYear}&month=${getMonth}&companyCode=${clientData.companyCode}`;
+    let str: any = `companyId=${filter.clientName.value}&branchCode=${findBranch.branchCode}&year=${getYear}&month=${getMonth}&companyCode=${clientData.companyCode}`;
 
     let promiseArr: any = [];
     promiseArr.push(getLicense(str));
@@ -237,6 +264,7 @@ export const DashboardPage = () => {
           activeTab={activeTab}
           dateRange={dateRange}
           onDateRangeChange={handleDateRangeChange}
+          loadFromOptions={loadFromOptions}
         />
       </div>
       <div className='px-4 sm:px-6'>

@@ -7,6 +7,12 @@ export const getClients = async () => {
   return result?.data;
 };
 
+export const getSearchClients = async (name: any = '') => {
+  const result: any = await axios.get(`${BASE_URL}client/search?name=${name}`);
+
+  return result?.data;
+};
+
 export const getBranch = async (companyId: any) => {
   const result: any = await axios.get(
     `${BASE_URL}client/branches?companyId=${companyId}`

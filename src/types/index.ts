@@ -49,6 +49,7 @@ export interface Filters {
   clientName: string;
   state: string;
   branch: string;
+  date?: any;
   // section: string;
 }
 

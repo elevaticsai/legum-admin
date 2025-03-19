@@ -11,6 +11,9 @@ import type {
   Filters,
   DataState,
 } from '../../types';
+import moment from 'moment';
+
+import CsvDownloadButton from 'react-json-to-csv';
 
 interface StatCardProps {
   title: string;
@@ -113,6 +116,13 @@ export const ComplianceView: React.FC<ComplianceViewProps> = ({
     },
   ];
 
+  const getMonth: any = moment(filters?.date + '-01', 'YYYY-MM-DD').format(
+    'MMMM'
+  );
+  const getYear: any = moment(filters?.date + '-01', 'YYYY-MM-DD').format(
+    'YYYY'
+  );
+
   return (
     <div className='p-6 space-y-6'>
       {/* <FilterPanel 
@@ -171,9 +181,17 @@ export const ComplianceView: React.FC<ComplianceViewProps> = ({
       <div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>
         <div className='lg:col-span-3'>
           <div className='bg-white rounded-xl shadow-sm border border-gray-100 p-6'>
-            <h2 className='text-lg font-semibold text-gray-900 mb-6'>
-              Compliance Records
-            </h2>
+            <div className='flex items-center justify-between mb-6'>
+              <h2 className='text-lg font-semibold text-gray-900'>
+                Compliance Records
+              </h2>
+              <div className='flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700'>
+                <CsvDownloadButton
+                  data={data}
+                  filename={`${activeTab}-${getMonth}-${getYear}.csv`}
+                />
+              </div>
+            </div>
             <DataTable
               data={data as any[]}
               columns={columns}
