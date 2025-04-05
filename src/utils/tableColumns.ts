@@ -22,37 +22,20 @@ export const getTableColumns = (tab: string): any[] => {
   switch (tab) {
     case 'license':
       return [
-        // { label: 'Act Name', value: 'Act Name' },
-        { label: 'Details', value: 'name' },
-        { label: 'Status', value: 'status' },
+        { label: 'License Name', value: 'name' },
         { label: 'Registration Number', value: 'licenseNo' },
-        { label: 'Valid till', value: 'validity' },
-        // { label: 'Forms', value: 'Forms' },
-        // { label: 'Displayed', value: 'Displayed' },
-        { label: 'Documents Verified', value: 'verified' },
+        { label: 'Validity', value: 'validityType' },
+        { label: 'Documents Verified', value: 'status' },
         { label: 'Compliance Status', value: 'complianceStatus' },
         { label: 'Remarks', value: 'remarks' },
-        // { label: 'Clients ID', value: 'Clients ID' },
-        // { label: 'Clients Name', value: 'Clients Name' },
-        // { label: 'Location', value: 'Location' },
-        // { label: 'State', value: 'State' },
-        // { label: 'Section', value: 'Section' },
       ];
     case 'notices':
       return [
-        // { label: 'Act Name', value: 'Act Name' },
-        { label: 'Details', value: 'name' },
-        //{ label: 'Forms', value: 'Forms' },
-        { label: 'Status', value: 'status' },
-        // { label: 'Displayed', value: 'Displayed' },
-        { label: 'Documents Verified', value: 'verified' },
+        { label: 'Notice Name', value: 'name' },
+        { label: 'Validity', value: 'validityType' },
+        { label: 'Documents Verified', value: 'status' },
         { label: 'Compliance Status', value: 'complianceStatus' },
         { label: 'Remarks', value: 'remarks' },
-        // { label: 'Clients ID', value: 'Clients ID' },
-        // { label: 'Clients Name', value: 'Clients Name' },
-        // { label: 'Location', value: 'Location' },
-        // { label: 'State', value: 'State' },
-        // { label: 'Section', value: 'Section' },
       ];
     case 'register':
       return [
@@ -76,38 +59,37 @@ export const getTableColumns = (tab: string): any[] => {
       ];
     case 'return':
       return [
-        // { label: 'Act Name', value: 'Act Name' },
-        { label: 'Details', value: 'name' },
-        { label: 'Status', value: 'status' },
-        // { label: 'Forms', value: 'Forms' },
-        // { label: 'Month', value: 'Month' },
-        // { label: 'Submission Date', value: 'Submission Date' },
-        // { label: 'Submit Through', value: 'Submit Through' },
-        { label: 'Compliance Status', value: 'complianceStatus' },
-        { label: 'Remarks', value: 'remarks' },
-        // { label: 'Clients ID', value: 'Clients ID' },
-        // { label: 'Clients Name', value: 'Clients Name' },
-        // { label: 'Location', value: 'Location' },
-        // { label: 'State', value: 'State' },
-        // { label: 'Section', value: 'Section' },
+        { label: 'Return Name', value: 'name' },
+        { label: 'Act Name', value: 'actName' },
+        { label: 'frequency', value: 'frequency' },
+        { label: 'Documents Verified', value: 'status' },
+        {
+          label: 'Compliance Status',
+          value: 'currentCompliance.complianceStatus',
+        },
+        { label: 'Return Filed Date', value: 'currentCompliance.depositDate' },
+        { label: 'Due Date', value: 'transactionQuery.dueDate' },
+        { label: 'Remarks', value: 'currentCompliance.remarks' },
       ];
     case 'remittance':
       return [
-        // { label: 'Act Name', value: 'Act Name' },
-        { label: 'Details', value: 'name' },
-        { label: 'Status', value: 'status' },
-        // { label: 'Challan No.', value: 'challanNumber' },
-        // { label: 'Challan Date', value: 'challanDate' },
-        // { label: 'Payment Date', value: 'depositDate' },
-        // { label: 'Amount', value: 'depositAmount' },
-        // { label: 'Due Date', value: 'Due Date' },
-        { label: 'Compliance Status', value: 'complianceStatus' },
-        { label: 'Remarks', value: 'remarks' },
-        // { label: 'Clients ID', value: 'Clients ID' },
-        // { label: 'Clients Name', value: 'Clients Name' },
-        // { label: 'Location', value: 'Location' },
-        // { label: 'State', value: 'State' },
-        // { label: 'Section', value: 'Section' },
+        { label: 'Remittance Name', value: 'name' },
+        { label: 'Act Name', value: 'actName' },
+        { label: 'frequency', value: 'frequency' },
+        { label: 'Documents Verified', value: 'status' },
+        {
+          label: 'Compliance Status',
+          value: 'currentCompliance.complianceStatus',
+        },
+        { label: 'Challan NO.', value: 'currentCompliance.challanNumber' },
+        { label: 'Challan Date', value: 'currentCompliance.challanDate' },
+        {
+          label: 'Paid Total Contribution',
+          value: 'currentCompliance.depositAmount',
+        },
+        { label: 'Payment Date', value: 'currentCompliance.depositDate' },
+        { label: 'Due Date', value: 'transactionQuery.dueDate' },
+        { label: 'Remarks', value: 'currentCompliance.remarks' },
       ];
     case 'employee':
       return [

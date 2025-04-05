@@ -12,9 +12,9 @@ import { TabButton } from '../TabButton';
 const tabs = [
   { id: 'license', label: 'License & Registration', icon: Layout },
   { id: 'notices', label: 'Abstract & Notices', icon: FileText },
-  { id: 'register', label: 'Register & Records', icon: BookOpen },
-  { id: 'return', label: 'Return', icon: SendHorizontal },
   { id: 'remittance', label: 'Remittance', icon: CreditCard },
+  { id: 'return', label: 'Return', icon: SendHorizontal },
+  { id: 'register', label: 'Register & Records', icon: BookOpen },
   // { id: 'employee', label: 'Employee Status', icon: Users },
 ];
 

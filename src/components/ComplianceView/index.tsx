@@ -123,17 +123,45 @@ export const ComplianceView: React.FC<ComplianceViewProps> = ({
     'YYYY'
   );
 
+  let newDownload: any = data.map((curr: any) => {
+    let downloadData: any = {};
+
+    Object.keys(curr).map((ele: any) => {
+      if (ele == 'attachments') {
+        downloadData[ele] =
+          curr[ele] && curr[ele].length > 0 ? curr[ele][0] : '';
+      } else if (typeof curr[ele] === 'object') {
+        Object.keys(curr[ele]).map((item: any) => {
+          if (
+            item == 'challan' ||
+            item == 'ecr' ||
+            item == 'paymentConfirmation'
+          ) {
+            downloadData[ele + '-' + item] =
+              curr[ele][item] && curr[ele][item].length > 0
+                ? curr[ele][item][0]
+                : '';
+          } else {
+            downloadData[ele + '-' + item] = curr[ele][item];
+          }
+        });
+      } else if (
+        (activeTab == 'license' || activeTab == 'notices') &&
+        ele == 'complianceStatus'
+      ) {
+        downloadData['complianceStatus'] = curr[ele]
+          ? 'COMPLIANT'
+          : 'NON COMPLIANT';
+      } else {
+        downloadData[ele] = curr[ele];
+      }
+    });
+
+    return downloadData;
+  });
+
   return (
     <div className='p-6 space-y-6'>
-      {/* <FilterPanel 
-        filters={filters}
-        onFilterChange={onFilterChange}
-        getUniqueValues={getUniqueValues}
-        activeTab={activeTab}
-        dateRange={dateRange}
-        onDateRangeChange={onDateRangeChange}
-      /> */}
-
       <div className='grid grid-cols-1 sm:grid-cols-3 gap-6'>
         <StatCard
           title='Total Records'
@@ -187,7 +215,7 @@ export const ComplianceView: React.FC<ComplianceViewProps> = ({
               </h2>
               <div className='flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700'>
                 <CsvDownloadButton
-                  data={data}
+                  data={newDownload}
                   filename={`${activeTab}-${getMonth}-${getYear}.csv`}
                 />
               </div>

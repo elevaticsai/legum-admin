@@ -21,9 +21,7 @@ import debounce from 'lodash/debounce';
 export const DashboardPage = () => {
   const [activeTab, setActiveTab] = useState('license');
   const {
-    filteredData,
     data,
-    filters,
     dateRange,
     handleFilterChange,
     handleDateRangeChange,
@@ -106,7 +104,6 @@ export const DashboardPage = () => {
   };
 
   const handleFilter = (key: any, value: any) => {
-    console.log('value', value);
     let filterData = { ...filter, [key]: value };
     if (key == 'state') {
       filterData['branch'] = '';
@@ -138,11 +135,7 @@ export const DashboardPage = () => {
     const getMonth = moment(filter.date + '-01', 'YYYY-MM-DD').format('MMMM');
     const getYear = moment(filter.date + '-01', 'YYYY-MM-DD').format('YYYY');
 
-    const clientData = optionsData.clientName.find(
-      (el: any) => el._id == filter.clientName.value
-    );
-
-    let str: any = `companyId=${filter.clientName.value}&branchCode=${findBranch.branchCode}&year=${getYear}&month=${getMonth}&companyCode=${clientData.companyCode}`;
+    let str: any = `companyId=${filter.clientName.value}&branchCode=${findBranch.branchCode}&year=${getYear}&month=${getMonth}`;
 
     let promiseArr: any = [];
     promiseArr.push(getLicense(str));
@@ -165,8 +158,16 @@ export const DashboardPage = () => {
           complianceCategoryCount: any = 0;
         if (ele?.result) {
           ele?.result.map((item: any) => {
-            if (item.complianceStatus == 'COMPLIANT')
-              complianceCategoryCount += 1;
+            if (ele.type == 'license' || ele.type == 'notices') {
+              if (item.complianceStatus) complianceCategoryCount += 1;
+            } else if (ele.type == 'remittance' || ele.type == 'return') {
+              if (
+                item?.currentCompliance &&
+                item?.currentCompliance?.complianceStatus &&
+                item?.currentCompliance?.complianceStatus == 'COMPLIANT'
+              )
+                complianceCategoryCount += 1;
+            }
           });
           categoryCount = ele.result.length;
         }
@@ -194,8 +195,8 @@ export const DashboardPage = () => {
       let overallComplianceData: any = {
         license: 0,
         notices: 0,
-        return: 0,
         remittance: 0,
+        return: 0,
         register: 0,
       };
 
@@ -239,8 +240,6 @@ export const DashboardPage = () => {
     });
   };
 
-  const handleSubmitForm = (item: any) => {};
-
   useEffect(() => {
     getClientsData();
   }, []);
@@ -282,7 +281,6 @@ export const DashboardPage = () => {
           data={
             listData && listData[activeTab] ? listData[activeTab]?.data : []
           }
-          //data={filteredData[activeTab as keyof typeof filteredData] || []}
           allData={data}
           filters={filter}
           dateRange={dateRange}
@@ -290,7 +288,7 @@ export const DashboardPage = () => {
           onDateRangeChange={handleDateRangeChange}
           getUniqueValues={getUniqueValues}
           activeTab={activeTab}
-          handleSubmitForm={handleSubmitForm}
+          handleSubmitForm={() => {}}
         />
       </div>
     </div>
